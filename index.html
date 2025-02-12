@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>واجهة تفاعلية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>تحقق من الحسابات</h1>
+        <input type="text" id="email" placeholder="أدخل الإيميل" required>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+        <button onclick="checkAccount()">تحقق</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function checkAccount() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!email || !password) {
+                resultDiv.innerHTML = "يرجى ملء جميع الحقول.";
+                resultDiv.className = "result error";
+                return;
+            }
+
+            // هنا يمكنك إضافة وظيفة تحقق الحساب (مثل استدعاء قاعدة بيانات أو API)
+            // هذه مجرد محاكاة
+            const isValid = Math.random() < 0.5; // نسبة النجاح 50%
+
+            if (isValid) {
+                resultDiv.innerHTML = `ناجح!<br>الإيميل: ${email}<br>كلمة المرور: ${password}`;
+                resultDiv.className = "result success";
+            } else {
+                resultDiv.innerHTML = `فشل!<br>الإيميل: ${email}<br>كلمة المرور: ${password}`;
+                resultDiv.className = "result error";
+            }
+        }
+    </script>
+</body>
+</html>
