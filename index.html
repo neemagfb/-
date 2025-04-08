@@ -1,95 +1,117 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>واجهة تفاعلية</title>
+    <title>فاحص ومولد الـبـروكـسـيـات 🚀</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, button { padding: 10px; margin: 10px; }
+        textarea { width: 100%; height: 200px; }
+        .status { margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>تحقق من الحسابات</h1>
-        <input type="text" id="email" placeholder="أدخل الإيميل" required>
-        <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
-        <button onclick="checkAccount()">تحقق</button>
-        <div id="result" class="result"></div>
+
+    <h1>فاحص ومولد الـبـروكـسـيـات 🚀</h1>
+
+    <div>
+        <h3>تـولـيـد بـروكـسـيـات</h3>
+        <label for="proxyCount">عدد الـبـروكـسـيـات المراد إنشاؤها :</label>
+        <input type="number" id="proxyCount" value="10" min="1" max="1000">
+        <button onclick="generateProxies()">تـولـيـد بـروكـسـيـات</button>
     </div>
 
-    <script>
-        function checkAccount() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const resultDiv = document.getElementById('result');
+    <h3>تـولـيـد بـروكـسـيـات</h3>
+    <textarea id="proxyList" readonly></textarea>
+    
+    <div class="status">
+        <button onclick="saveProxies()">حفظ الـبـروكـسـيـات كملف نصي </button>
+        <p id="saveStatus"></p>
+    </div>
 
-            if (!email || !password) {
-                resultDiv.innerHTML = "يرجى ملء جميع الحقول.";
-                resultDiv.className = "result error";
+    <div>
+        <h3>فـحـص الـبـروكـسـيـات</h3>
+        <button onclick="checkProxies()">فـحـص الـبـروكـسـيات</button>
+    </div>
+
+    <h3>نتائج فحص الـبـروكـسـيـات</h3>
+    <div id="checkerResults"></div>
+
+    <script>
+        // Function to generate random proxies
+        function generateProxies() {
+            const proxyCount = document.getElementById('proxyCount').value;
+            let proxies = [];
+            
+            for (let i = 0; i < proxyCount; i++) {
+                // Generate a random IP address and port (fake proxy generator)
+                let ip = `${Math.floor(Math.random() * 255) + 1}.${Math.floor(Math.random() * 255) + 1}.${Math.floor(Math.random() * 255) + 1}.${Math.floor(Math.random() * 255) + 1}`;
+                let port = Math.floor(Math.random() * 65535) + 1; // Random port
+                proxies.push(`${ip}:${port}`);
+            }
+
+            document.getElementById('proxyList').value = proxies.join("\n");
+        }
+
+        // Function to save proxies as a text file
+        function saveProxies() {
+            const proxiesText = document.getElementById('proxyList').value;
+            if (!proxiesText.trim()) {
+                alert('الرجاء إنشاء بـروكـسـيـات أولاً.');
                 return;
             }
 
-            // هنا يمكنك إضافة وظيفة تحقق الحساب (مثل استدعاء قاعدة بيانات أو API)
-            // هذه مجرد محاكاة
-            const isValid = Math.random() < 0.5; // نسبة النجاح 50%
+            const blob = new Blob([proxiesText], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'proxies.txt';
+            link.click();
+            document.getElementById('saveStatus').textContent = 'تم حفظ الـبـروكـسـيـات بملف proxies.txt';
+        }
 
-            if (isValid) {
-                resultDiv.innerHTML = `ناجح!<br>الإيميل: ${email}<br>كلمة المرور: ${password}`;
-                resultDiv.className = "result success";
-            } else {
-                resultDiv.innerHTML = `فشل!<br>الإيميل: ${email}<br>كلمة المرور: ${password}`;
-                resultDiv.className = "result error";
+        // وظيفة للتحقق مما إذا كانت البروكسيات تعمل 
+        async function checkProxies() {
+            const proxyList = document.getElementById('proxyList').value.split("\n").filter(p => p.trim() !== "");
+            const checkerResults = document.getElementById('checkerResults');
+            checkerResults.innerHTML = '';
+
+            if (proxyList.length === 0) {
+                alert('Please generate proxies first.');
+                return;
+            }
+
+            for (const proxy of proxyList) {
+                const [ip, port] = proxy.split(":");
+                const proxyUrl = `http://${ip}:${port}`;
+
+                // Perform a basic check to see if the proxy is working
+                const isWorking = await checkProxyWorking(proxyUrl);
+
+                // Display results for each proxy
+                const result = document.createElement('p');
+                result.textContent = `${proxy} - ${isWorking ? 'يـعـمـل' : 'لا يـعـمـل'}`;
+                checkerResults.appendChild(result);
+            }
+        }
+
+        // Function to test if a proxy is working
+        async function checkProxyWorking(proxyUrl) {
+            try {
+                const response = await fetch('https://httpbin.org/ip', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    proxy: proxyUrl,
+                    timeout: 5000
+                });
+                return response.ok;
+            } catch (error) {
+                return false;
             }
         }
     </script>
+
 </body>
 </html>
